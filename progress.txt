@@ -1,0 +1,139 @@
+# progress.txt — LedgerOS Build Progress
+
+Last Updated: 2026-02-05
+
+## STATUS: Phase 1 & 2 Complete, Phase 3 Ready
+
+---
+
+## COMPLETED:
+
+### Documentation Phase
+- [x] PRD.md — Product requirements defined
+- [x] APP_FLOW.md — User flows and navigation mapped
+- [x] TECH_STACK.md — Dependencies locked to exact versions
+- [x] FRONTEND_GUIDELINES.md — Design system defined
+- [x] BACKEND_STRUCTURE.md — Database schema designed
+- [x] IMPLEMENTATION_PLAN.md — 14-phase build sequence ready
+- [x] CLAUDE.md — AI configuration set
+
+### Phase 1: Project Setup (COMPLETE)
+- [x] Step 1.1: Initialize Next.js project (Next.js 14.2.0 installed)
+- [x] Step 1.2: Install core dependencies (all packages from TECH_STACK.md)
+- [x] Step 1.3: Install dev dependencies (prettier + types)
+- [x] Step 1.4: Configure Tailwind (config matches FRONTEND_GUIDELINES.md)
+- [x] Step 1.5: Create folder structure (all folders created)
+- [x] Step 1.6: Set up Supabase client (client.ts and server.ts created)
+- [x] Step 1.7: Create base UI components (Button, Input, Card, Dialog, Select, Table, Toast, Badge, Checkbox, Tabs, Skeleton, Label, Toaster)
+- [x] Step 1.8: Create layout components (Navbar, Container, PageHeader, Sidebar)
+- [x] Step 1.9: Create TypeScript types (src/types/index.ts, src/types/supabase.ts)
+
+### Phase 2: Database Setup (COMPLETE)
+- [x] Step 2.1: Create Supabase Project (documented)
+- [x] Step 2.2: Core migrations (001_initial_schema.sql - profiles, ledgers, transactions, ledger_entries)
+- [x] Step 2.3: Category migrations (002_categories.sql - categories, classifications with seed data)
+- [x] Step 2.4: Rules & Subscriptions migrations (003_rules_subscriptions.sql - rules, subscriptions, review_queue, statement_files)
+- [x] Step 2.5: Database views (004_views.sql - ledger_balances, transactions_with_classification, review_queue_full, monthly_summary, etc.)
+- [x] Seed file (seed.sql - default categories)
+
+### Phase 3: Authentication (Ready to Test)
+- [x] Step 3.1: Configure Supabase Auth (code ready, needs Supabase project)
+- [x] Step 3.2: Build Login Page (/login with email/password + signup)
+- [x] Step 3.3: Build Auth Layout (centered card with logo)
+- [x] Step 3.4: Protect Dashboard Routes (layout.tsx checks session)
+
+---
+
+## IN PROGRESS:
+
+None — Ready for Phase 4 (Ledger Management)
+
+---
+
+## NEXT STEPS:
+
+Per IMPLEMENTATION_PLAN.md:
+1. Create Supabase project at supabase.com
+2. Run migrations in Supabase SQL Editor (in order: 001, 002, 003, 004)
+3. Add environment variables to .env.local
+4. Test authentication flow (signup, login, logout)
+5. Proceed to Phase 4: Ledger Management
+
+---
+
+## FILE STRUCTURE:
+
+```
+app/
+├── src/
+│   ├── app/
+│   │   ├── (auth)/           # Auth routes
+│   │   │   ├── login/page.tsx
+│   │   │   └── layout.tsx
+│   │   ├── (dashboard)/      # Protected routes
+│   │   │   ├── dashboard/page.tsx
+│   │   │   ├── ledgers/
+│   │   │   ├── inbox/page.tsx
+│   │   │   ├── transactions/
+│   │   │   ├── subscriptions/page.tsx
+│   │   │   ├── rules/page.tsx
+│   │   │   ├── settings/page.tsx
+│   │   │   └── layout.tsx
+│   │   ├── layout.tsx
+│   │   └── page.tsx          # Landing page
+│   ├── components/
+│   │   ├── ui/               # 13 base UI components
+│   │   └── layout/           # Navbar, Sidebar, Container, PageHeader
+│   ├── lib/
+│   │   ├── supabase/         # Client + server clients
+│   │   └── utils/            # Utilities (cn, formatMoney, etc.)
+│   ├── types/                # TypeScript types
+│   │   ├── index.ts          # App types
+│   │   └── supabase.ts       # Database types
+│   └── hooks/                # use-toast.ts
+├── supabase/
+│   ├── migrations/
+│   │   ├── 001_initial_schema.sql
+│   │   ├── 002_categories.sql
+│   │   ├── 003_rules_subscriptions.sql
+│   │   └── 004_views.sql
+│   └── seed.sql
+├── .env.example
+└── progress.txt
+```
+
+---
+
+## BUILD STATUS:
+
+✅ `npm run build` — SUCCESS
+✅ All TypeScript types compile
+✅ All pages render (14 routes)
+✅ No lint errors
+
+---
+
+## KNOWN ISSUES:
+
+None — project builds and runs successfully.
+
+---
+
+## DECISIONS LOG:
+
+| Date | Decision | Rationale |
+|------|----------|-----------|
+| 2026-02-05 | MVP scope limited to CSV upload only | PDF parsing and email integration add significant complexity |
+| 2026-02-05 | Store money as BIGINT paise | Avoid floating point precision issues |
+| 2026-02-05 | Supabase for DB + Auth + Storage | Simplest full-stack solution for MVP |
+| 2026-02-05 | Review Inbox as primary UX | Matches "never guess intent" philosophy |
+| 2026-02-05 | Top navbar instead of sidebar | Cleaner mobile experience; sidebar also available for desktop |
+
+---
+
+## NOTES:
+
+- Phase 1 & 2 complete — project is ready for database connection
+- SQL migrations tested for syntax correctness
+- Authentication UI ready, needs Supabase project for full testing
+- Ready to proceed with Phase 4: Ledger Management
