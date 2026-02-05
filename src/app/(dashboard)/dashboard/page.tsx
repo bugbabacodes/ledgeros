@@ -1,97 +1,115 @@
+import { Container } from "@/components/layout/container";
 import { PageHeader } from "@/components/layout/page-header";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import Link from "next/link";
+
+// Mock data for demo
+const mockStats = {
+  netWorth: 245000,
+  bankAccounts: 156000,
+  creditCards: -12000,
+  cash: 8500,
+  investments: 92500,
+  inboxCount: 12,
+};
+
+const mockTransactions = [
+  { id: 1, description: "Amazon.com", amount: -2499, date: "2026-02-05", category: "Shopping" },
+  { id: 2, description: "Salary - TechCorp", amount: 150000, date: "2026-02-01", category: "Income" },
+  { id: 3, description: "Netflix", amount: -649, date: "2026-02-03", category: "Subscriptions" },
+  { id: 4, description: "Swiggy", amount: -450, date: "2026-02-04", category: "Food" },
+  { id: 5, description: "Uber", amount: -320, date: "2026-02-04", category: "Transport" },
+];
+
+function formatCurrency(amount: number) {
+  return new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
 
 export default function DashboardPage() {
   return (
-    <div>
+    <Container>
+      {/* Demo Banner */}
+      <div className="mb-6 bg-amber-50 border border-amber-200 rounded-lg p-3">
+        <p className="text-sm text-amber-800 text-center">
+          👋 <strong>Demo Mode</strong> — This is sample data. Connect Supabase to use real data.
+        </p>
+      </div>
+
       <PageHeader
         title="Dashboard"
-        description="Overview of your financial position"
-      >
-        <Link href="/ledgers/new">
-          <Button>Add Ledger</Button>
-        </Link>
-      </PageHeader>
+        description="Your financial overview at a glance"
+      />
+
+      {/* Net Worth Card */}
+      <Card className="p-6 mb-8 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+        <p className="text-blue-100 text-sm font-medium">Total Net Worth</p>
+        <p className="text-4xl font-bold mt-1">{formatCurrency(mockStats.netWorth)}</p>
+        <p className="text-blue-200 text-sm mt-2">Across all accounts</p>
+      </Card>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500">
-              Net Worth
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-slate-900">₹0.00</div>
-            <p className="text-xs text-slate-500 mt-1">
-              Across all ledgers
-            </p>
-          </CardContent>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <Card className="p-4">
+          <p className="text-slate-500 text-sm">Bank Accounts</p>
+          <p className="text-xl font-semibold text-slate-900">{formatCurrency(mockStats.bankAccounts)}</p>
         </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500">
-              Bank Accounts
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-slate-900">₹0.00</div>
-            <p className="text-xs text-slate-500 mt-1">
-              0 accounts
-            </p>
-          </CardContent>
+        <Card className="p-4">
+          <p className="text-slate-500 text-sm">Credit Cards</p>
+          <p className="text-xl font-semibold text-red-600">{formatCurrency(mockStats.creditCards)}</p>
         </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500">
-              Credit Cards
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-slate-900">₹0.00</div>
-            <p className="text-xs text-slate-500 mt-1">
-              0 cards
-            </p>
-          </CardContent>
+        <Card className="p-4">
+          <p className="text-slate-500 text-sm">Cash</p>
+          <p className="text-xl font-semibold text-slate-900">{formatCurrency(mockStats.cash)}</p>
         </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500">
-              Review Inbox
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-slate-900">0</div>
-            <p className="text-xs text-slate-500 mt-1">
-              Items need attention
-            </p>
-          </CardContent>
+        <Card className="p-4">
+          <p className="text-slate-500 text-sm">Investments</p>
+          <p className="text-xl font-semibold text-green-600">{formatCurrency(mockStats.investments)}</p>
         </Card>
       </div>
 
-      {/* Empty State */}
-      <Card className="text-center py-12">
-        <CardContent>
-          <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-2xl">📊</span>
-          </div>
-          <h3 className="text-lg font-semibold text-slate-900 mb-2">
-            Welcome to LedgerOS
-          </h3>
-          <p className="text-slate-500 max-w-md mx-auto mb-6">
-            Get started by creating your first ledger. A ledger represents a bank account, 
-            credit card, or cash pool that you want to track.
-          </p>
-          <Link href="/ledgers/new">
-            <Button>Create Your First Ledger</Button>
+      {/* Inbox Alert */}
+      {mockStats.inboxCount > 0 && (
+        <Link href="/inbox">
+          <Card className="p-4 mb-8 bg-orange-50 border-orange-200 hover:bg-orange-100 cursor-pointer transition-colors">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium text-orange-900">📥 Review Inbox</p>
+                <p className="text-sm text-orange-700">{mockStats.inboxCount} transactions need categorization</p>
+              </div>
+              <span className="text-orange-600">→</span>
+            </div>
+          </Card>
+        </Link>
+      )}
+
+      {/* Recent Transactions */}
+      <div>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-semibold text-slate-900">Recent Transactions</h2>
+          <Link href="/transactions" className="text-sm text-blue-600 hover:underline">
+            View all →
           </Link>
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+        <Card>
+          <div className="divide-y divide-slate-100">
+            {mockTransactions.map((tx) => (
+              <div key={tx.id} className="p-4 flex justify-between items-center">
+                <div>
+                  <p className="font-medium text-slate-900">{tx.description}</p>
+                  <p className="text-sm text-slate-500">{tx.date} • {tx.category}</p>
+                </div>
+                <p className={`font-semibold ${tx.amount < 0 ? "text-slate-900" : "text-green-600"}`}>
+                  {formatCurrency(tx.amount)}
+                </p>
+              </div>
+            ))}
+          </div>
+        </Card>
+      </div>
+    </Container>
   );
 }

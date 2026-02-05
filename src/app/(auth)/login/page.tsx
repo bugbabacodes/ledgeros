@@ -6,86 +6,25 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
-import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { toast } = useToast();
-  const supabase = createClient();
+
+  const handleDemo = () => {
+    // Demo mode - skip auth, go straight to dashboard
+    router.push("/dashboard");
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) {
-        toast({
-          title: "Login failed",
-          description: error.message,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Welcome back!",
-          description: "You have been logged in successfully.",
-        });
-        router.push("/dashboard");
-        router.refresh();
-      }
-    } catch (error) {
-      toast({
-        title: "Something went wrong",
-        description: "Please try again later.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/dashboard`,
-        },
-      });
-
-      if (error) {
-        toast({
-          title: "Sign up failed",
-          description: error.message,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Account created",
-          description: "Please check your email to verify your account.",
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Something went wrong",
-        description: "Please try again later.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    // Demo mode - just redirect
+    setTimeout(() => {
+      router.push("/dashboard");
+    }, 500);
   };
 
   return (
@@ -93,11 +32,36 @@ export default function LoginPage() {
       <div className="text-center">
         <h2 className="text-2xl font-bold text-slate-900">Welcome to LedgerOS</h2>
         <p className="mt-2 text-slate-600">
-          Sign in to your account or create a new one
+          Sign in to your account or try the demo
         </p>
       </div>
 
-      <form className="space-y-4">
+      {/* Demo Mode Banner */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <p className="text-sm text-blue-800 text-center">
+          🚀 <strong>Demo Mode:</strong> Supabase not configured yet.
+          <br />Click below to explore the app.
+        </p>
+      </div>
+
+      <Button 
+        onClick={handleDemo} 
+        className="w-full bg-blue-600 hover:bg-blue-700"
+        size="lg"
+      >
+        Enter Demo Mode →
+      </Button>
+
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-slate-200"></div>
+        </div>
+        <div className="relative flex justify-center text-sm">
+          <span className="px-2 bg-white text-slate-500">or sign in when ready</span>
+        </div>
+      </div>
+
+      <form className="space-y-4 opacity-50">
         <div>
           <Label htmlFor="email">Email address</Label>
           <Input
@@ -106,7 +70,7 @@ export default function LoginPage() {
             placeholder="you@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
+            disabled
             className="mt-1"
           />
         </div>
@@ -119,41 +83,23 @@ export default function LoginPage() {
             placeholder="••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
+            disabled
             className="mt-1"
           />
         </div>
 
-        <div className="flex gap-3">
-          <Button
-            type="submit"
-            className="flex-1"
-            onClick={handleLogin}
-            disabled={isLoading}
-          >
-            {isLoading ? "Signing in..." : "Sign In"}
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            className="flex-1"
-            onClick={handleSignUp}
-            disabled={isLoading}
-          >
-            Sign Up
-          </Button>
-        </div>
+        <Button
+          type="submit"
+          className="w-full"
+          onClick={handleLogin}
+          disabled
+        >
+          Sign In (Requires Supabase)
+        </Button>
       </form>
 
-      <p className="text-center text-sm text-slate-600">
-        By signing in, you agree to our{" "}
-        <Link href="#" className="text-blue-600 hover:underline">
-          Terms of Service
-        </Link>{" "}
-        and{" "}
-        <Link href="#" className="text-blue-600 hover:underline">
-          Privacy Policy
-        </Link>
+      <p className="text-center text-xs text-slate-500">
+        To enable full auth, add Supabase env vars to Vercel
       </p>
     </div>
   );
